@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌈 초등 퍼스널 컬러 & TPO 스타일 리포트 생성기</title>
+  <!-- Google Fonts: Jua & Gowun Dodum & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- html2canvas & jsPDF for PDF/Image Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Decorative Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <span class="logo-icon">🎨</span>
+        <div>
+          <h1 class="app-title">알록달록 퍼스널 컬러 & TPO 스타일 리포트</h1>
+          <p class="app-subtitle">초등학생을 위한 맞춤 퍼스널 컬러 진단과 상황별 코디 배려 가이드 🌟</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-open-theory" class="btn-secondary-sm" title="퍼스널 컬러 진단 원리 및 출처 보기">
+          <i class="fa-solid fa-book-open"></i> 진단 원리 & 출처
+        </button>
+        <button id="btn-api-setting" class="btn-secondary-sm" title="Gemini API 키 설정">
+          <i class="fa-solid fa-key"></i> API 키 설정
+        </button>
+        <button id="btn-open-gallery" class="btn-accent-sm">
+          <i class="fa-solid fa-images"></i> 학급 갤러리 <span id="gallery-count-badge" class="badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Bar Stepper -->
+  <nav class="stepper-wrapper">
+    <div class="stepper-container">
+      <div class="step-item active" id="step-nav-1">
+        <div class="step-circle">1</div>
+        <div class="step-label">퍼스널 컬러 진단</div>
+      </div>
+      <div class="step-line" id="line-1-2"></div>
+      <div class="step-item" id="step-nav-2">
+        <div class="step-circle">2</div>
+        <div class="step-label">진단 결과 & TPO 선택</div>
+      </div>
+      <div class="step-line" id="line-2-3"></div>
+      <div class="step-item" id="step-nav-3">
+        <div class="step-circle">3</div>
+        <div class="step-label">스타일 리포트 완성</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- STEP 1: 퍼스널 컬러 진단 & 스타 분장실 거울 -->
+    <section id="step-1" class="step-section active-section">
+      <div class="section-card">
+
+        <!-- 🎭 Dressing Room Mirror (스타 분장실 거울) -->
+        <div class="dressing-room-card">
+          <div class="dressing-header">
+            <span class="step-badge alt">🎭 스타 분장실</span>
+            <h2>✨ 실시간 분장실 거울 & 퍼스널 피팅 스튜디오</h2>
+            <p>왼쪽의 거울에 내 실제 얼굴이 크게 나옵니다! 오른쪽 옵션을 선택하여 피부 톤, 머리카락 색, 눈동자 색, 옷을 맞춰보세요.</p>
+          </div>
+
+          <div class="dressing-room-workspace">
+            <!-- Left Side: Large Mirror Viewport (540x540) -->
+            <div class="vanity-mirror-frame">
+              <!-- Vanity Bulb Lights -->
+              <div class="vanity-bulbs top">
+                <span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span>
+              </div>
+              <div class="vanity-bulbs left">
+                <span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span>
+              </div>
+              <div class="vanity-bulbs right">
+                <span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span>
+              </div>
+              <div class="vanity-bulbs bottom">
+                <span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span><span class="bulb">💡</span>
+              </div>
+
+              <!-- Mirror Viewport -->
+              <div class="mirror-viewport large-mirror">
+                <video id="live-mirror-video" autoplay playsinline muted class="mirror-video"></video>
+                <canvas id="live-mirror-canvas" width="540" height="540" class="mirror-canvas"></canvas>
+
+                <div id="mirror-camera-prompt" class="mirror-prompt">
+                  <span class="prompt-icon">🎥</span>
+                  <p>카메라를 활성화하여 분장실 거울에 내 얼굴을 비춰보세요!</p>
+                  <button type="button" id="btn-enable-auto-cam" class="btn-primary-sm">
+                    <i class="fa-solid fa-camera"></i> 실시간 카메라 켜기
+                  </button>
+                  <label for="input-mirror-upload" class="btn-secondary-sm" style="cursor:pointer; margin-top:8px;">
+                    <i class="fa-solid fa-upload"></i> 내 사진 업로드
+                    <input type="file" id="input-mirror-upload" accept="image/*" style="display:none;">
+                  </label>
+                </div>
+
+                <div class="mirror-live-badge">
+                  <span class="live-dot"></span> LIVE 분장실 거울
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Categorized Fitting Options Panel -->
+            <div class="vanity-controls-card">
+              <div class="vanity-toolbar">
+                <button type="button" id="btn-snap-mirror" class="btn-primary-sm highlight-pulse">
+                  <i class="fa-solid fa-camera-retro"></i> 📸 피팅 샷 찰칵!
+                </button>
+                <button type="button" id="btn-toggle-ba" class="btn-accent-sm">
+                  <i class="fa-solid fa-code-compare"></i> 🔍 Before & After 비교
+                </button>
+                <button type="button" id="btn-toggle-mirror-cam" class="btn-secondary-sm">
+                  <i class="fa-solid fa-video"></i> 카메라 켜기/끄기
+                </button>
+              </div>
+
+              <!-- Before & After Split Range Bar (visible when BA comparison is active) -->
+              <div id="ba-split-control-box" class="ba-split-control-box" style="display:none;">
+                <div class="ba-labels">
+                  <span class="badge-before">◀ BEFORE (원본/워스트)</span>
+                  <span class="ba-hint">슬라이더를 좌우로 끌어보세요!</span>
+                  <span class="badge-after">AFTER (베스트 톤) ▶</span>
+                </div>
+                <input type="range" id="ba-split-slider" min="0" max="100" value="50" class="ba-split-slider">
+              </div>
+
+              <!-- Categorized Fitting Tabs -->
+              <div class="fitting-tab-nav">
+                <button type="button" class="f-tab-btn active" data-ftab="ftab-skin-step">
+                  💡 피부 명도 단계
+                </button>
+                <button type="button" class="f-tab-btn" data-ftab="ftab-undertone">
+                  🌡️ 웜톤/쿨톤 온도
+                </button>
+                <button type="button" class="f-tab-btn" data-ftab="ftab-drape-palette">
+                  🎨 계절별 컬러 천
+                </button>
+                <button type="button" class="f-tab-btn" data-ftab="ftab-hair-eye">
+                  💇‍♀️ 머리 & 눈동자 톤
+                </button>
+              </div>
+
+              <!-- Tab 1: 피부 명도 5단계 -->
+              <div id="ftab-skin-step" class="f-tab-content active">
+                <h4><i class="fa-solid fa-sun"></i> 피부 명도 단계 (밝음 ~ 어두움)</h4>
+                <p class="tab-sub">내 피부의 맑기와 밝기 수준을 5단계로 테스트해 보세요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item active" data-bright="very_bright">
+                    <span class="color-swatch-circle" style="background:#FFF3E0; border:2px solid #FFE0B2;"></span>
+                    <span>✨ 매우 밝음 (13호)</span>
+                  </div>
+                  <div class="fit-chip-item" data-bright="medium_bright">
+                    <span class="color-swatch-circle" style="background:#FFE8D6; border:2px solid #FFCC80;"></span>
+                    <span>🌸 중간 밝음 (19~21호)</span>
+                  </div>
+                  <div class="fit-chip-item" data-bright="soft_bright">
+                    <span class="color-swatch-circle" style="background:#F7D6C8; border:2px solid #FFB74D;"></span>
+                    <span>🌿 은은한 밝음 (22호)</span>
+                  </div>
+                  <div class="fit-chip-item" data-bright="calm_medium">
+                    <span class="color-swatch-circle" style="background:#E0A96D; border:2px solid #FFA726;"></span>
+                    <span>🍯 차분한 중간 (23호)</span>
+                  </div>
+                  <div class="fit-chip-item" data-bright="vivid_deep">
+                    <span class="color-swatch-circle" style="background:#A76D43; border:2px solid #FB8C00;"></span>
+                    <span>🍂 또렷한 딥 (25호+)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 2: 웜톤 / 쿨톤 언더톤 온도 -->
+              <div id="ftab-undertone" class="f-tab-content">
+                <h4><i class="fa-solid fa-temperature-half"></i> 언더톤 베이스 (웜톤 vs 쿨톤)</h4>
+                <p class="tab-sub">얼굴에 옐로우 골드빛(웜톤)과 핑크 로즈빛(쿨톤)을 대보고 혈색을 확인해요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item active" data-undertone="warm_gold">
+                    <span class="color-swatch-circle" style="background:#FFD54F;"></span>
+                    <span>🔥 따뜻한 옐로우 웜</span>
+                  </div>
+                  <div class="fit-chip-item" data-undertone="warm_peach">
+                    <span class="color-swatch-circle" style="background:#FFB74D;"></span>
+                    <span>🍑 생기 피치 웜</span>
+                  </div>
+                  <div class="fit-chip-item" data-undertone="neutral">
+                    <span class="color-swatch-circle" style="background:#E0E0E0;"></span>
+                    <span>⚖️ 균형 잡힌 뉴트럴</span>
+                  </div>
+                  <div class="fit-chip-item" data-undertone="cool_rose">
+                    <span class="color-swatch-circle" style="background:#F48FB1;"></span>
+                    <span>🌸 핑크 로즈 쿨</span>
+                  </div>
+                  <div class="fit-chip-item" data-undertone="cool_blue">
+                    <span class="color-swatch-circle" style="background:#90CAF9;"></span>
+                    <span>❄️ 시원한 아이스 쿨</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 3: 계절별 퍼스널 컬러 천 드레이프 -->
+              <div id="ftab-drape-palette" class="f-tab-content">
+                <h4><i class="fa-solid fa-palette"></i> 계절별 찰떡 컬러 천 드레이핑</h4>
+                <p class="tab-sub">어깨 위에 톤별 베스트 컬러 천을 대보고 얼굴이 가장 환해지는 천을 찾아보세요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item active" data-drape-key="spring_yellow">
+                    <span class="color-swatch-circle" style="background:#FFD166;"></span>
+                    <span>봄 햇살 옐로우</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="spring_coral">
+                    <span class="color-swatch-circle" style="background:#FF9F1C;"></span>
+                    <span>봄 생기 코랄</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="summer_lavender">
+                    <span class="color-swatch-circle" style="background:#C77DFF;"></span>
+                    <span>여름 라벤더</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="summer_sky">
+                    <span class="color-swatch-circle" style="background:#90E0EF;"></span>
+                    <span>여름 파스텔 하늘</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="autumn_maple">
+                    <span class="color-swatch-circle" style="background:#E07A5F;"></span>
+                    <span>가을 노을 단풍</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="autumn_khaki">
+                    <span class="color-swatch-circle" style="background:#81B29A;"></span>
+                    <span>가을 숲속 카키</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="winter_pink">
+                    <span class="color-swatch-circle" style="background:#FF0054;"></span>
+                    <span>겨울 핫 핑크</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="winter_cobalt">
+                    <span class="color-swatch-circle" style="background:#03045E;"></span>
+                    <span>겨울 코발트 블루</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 4: 머리카락 & 눈동자 톤 매치 -->
+              <div id="ftab-hair-eye" class="f-tab-content">
+                <h4><i class="fa-solid fa-user-gear"></i> 머리카락 & 눈동자 톤 매치</h4>
+                <p class="tab-sub">나의 자연 머리색과 눈동자 톤을 맞춰 매치해 보세요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item active" data-feature="hair_light_brown">
+                    <span class="item-emoji">💇‍♀️</span>
+                    <span>밝은 갈색 머리</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="hair_soft_brown">
+                    <span class="item-emoji">👧</span>
+                    <span>부드러운 흑갈색</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="hair_deep_brown">
+                    <span class="item-emoji">👦</span>
+                    <span>짙은 밤색 갈색</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="hair_black">
+                    <span class="item-emoji">🧑</span>
+                    <span>칠흑 검정 머리</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="eye_honey">
+                    <span class="color-swatch-circle" style="background:#B37D4E;"></span>
+                    <span>밝은 꿀빛 눈동자</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="eye_chestnut">
+                    <span class="color-swatch-circle" style="background:#4A2C11;"></span>
+                    <span>그윽한 딥 브라운</span>
+                  </div>
+                  <div class="fit-chip-item" data-feature="eye_vivid_black">
+                    <span class="color-swatch-circle" style="background:#111111;"></span>
+                    <span>선명한 검은 눈동자</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Automatic Feature Fine-Tuning Sliders -->
+              <div class="vanity-adj-box">
+                <div class="adj-header-text">
+                  <i class="fa-solid fa-sliders"></i> 내 얼굴 크기 맞춤 미세 조절
+                </div>
+                <div class="adj-row">
+                  <label>소품 크기</label>
+                  <input type="range" id="mirror-slider-scale" min="0.5" max="2.0" step="0.05" value="1.0">
+                </div>
+                <div class="adj-row">
+                  <label>상하 위치</label>
+                  <input type="range" id="mirror-slider-posy" min="-120" max="120" step="2" value="0">
+                </div>
+                <div class="adj-row">
+                  <label>좌우 위치</label>
+                  <input type="range" id="mirror-slider-posx" min="-120" max="120" step="2" value="0">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 35px;">
+          <span class="step-badge">1단계 퀴즈</span>
+          <h2>나에게 꼭 맞는 퍼스널 컬러를 찾아봐요! 🔍</h2>
+          <p>분장실 거울을 보면서 아래 4가지 질문에 답해 주세요.</p>
+        </div>
+
+        <form id="quiz-form" class="quiz-grid">
+
+          <!-- Q1: 피부 톤 -->
+          <div class="quiz-card">
+            <div class="quiz-title">
+              <span class="q-num">Q1</span>
+              <h3>내 피부 톤은 어떤가요? (밝음 / 중간 / 어두움)</h3>
+            </div>
+            <div class="options-group">
+              <label class="option-card">
+                <input type="radio" name="q_skin" value="spring" required>
+                <div class="option-content">
+                  <span class="opt-emoji">🟡</span>
+                  <div>
+                    <strong>밝은 톤 (노란빛이 도는 맑은 피부)</strong>
+                    <p>햇살을 받으면 밝고 화사하게 빛나요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_skin" value="summer">
+                <div class="option-content">
+                  <span class="opt-emoji">🌸</span>
+                  <div>
+                    <strong>밝은 톤 (핑크빛이 도는 맑은 피부)</strong>
+                    <p>피부가 얇고 은은한 붉은기가 돌며 깨끗해요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_skin" value="autumn">
+                <div class="option-content">
+                  <span class="opt-emoji">🍯</span>
+                  <div>
+                    <strong>중간 톤 (차분하고 따뜻한 베이지/황색 피부)</strong>
+                    <p>차분하고 따뜻한 꿀빛 베이지 피부예요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_skin" value="winter">
+                <div class="option-content">
+                  <span class="opt-emoji">❄️</span>
+                  <div>
+                    <strong>어두운/차가운 톤 (또렷한 푸른빛/대비가 강한 피부)</strong>
+                    <p>피부색과 이목구비의 대비가 또렷해요.</p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q2: 머리카락 색 -->
+          <div class="quiz-card">
+            <div class="quiz-title">
+              <span class="q-num">Q2</span>
+              <h3>내 머리카락 색은 어떤가요? (검정 / 갈색 / 밝은 갈색)</h3>
+            </div>
+            <div class="options-group">
+              <label class="option-card">
+                <input type="radio" name="q_hair" value="spring" required>
+                <div class="option-content">
+                  <span class="opt-emoji">✨</span>
+                  <div>
+                    <strong>밝은 갈색 (꿀빛 밝은 갈색)</strong>
+                    <p>빛을 받으면 밝고 화사한 갈색이에요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_hair" value="summer">
+                <div class="option-content">
+                  <span class="opt-emoji">🩶</span>
+                  <div>
+                    <strong>부드러운 갈색 / 애쉬 흑갈색</strong>
+                    <p>부드럽고 쨍하지 않은 은은한 흑갈색이에요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_hair" value="autumn">
+                <div class="option-content">
+                  <span class="opt-emoji">🍂</span>
+                  <div>
+                    <strong>짙은 갈색 (초콜릿/밤색)</strong>
+                    <p>가을 단풍처럼 짙고 따뜻한 갈색이에요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_hair" value="winter">
+                <div class="option-content">
+                  <span class="opt-emoji">🖤</span>
+                  <div>
+                    <strong>검정색 (칠흑 같은 또렷한 검은색)</strong>
+                    <p>윤기 나고 선명한 검정 머리예요.</p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3: 눈동자 색 -->
+          <div class="quiz-card">
+            <div class="quiz-title">
+              <span class="q-num">Q3</span>
+              <h3>내 눈동자 색은 어떤가요?</h3>
+            </div>
+            <div class="options-group">
+              <label class="option-card">
+                <input type="radio" name="q_eye" value="spring" required>
+                <div class="option-content">
+                  <span class="opt-emoji">👀</span>
+                  <div>
+                    <strong>밝은 갈색 (반짝이는 맑은 갈색)</strong>
+                    <p>눈동자가 밝고 테두리가 부드러워요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_eye" value="summer">
+                <div class="option-content">
+                  <span class="opt-emoji">☁️</span>
+                  <div>
+                    <strong>부드러운 흑갈색 (은은한 눈빛)</strong>
+                    <p>눈빛이 부드럽고 차분한 느낌이에요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_eye" value="autumn">
+                <div class="option-content">
+                  <span class="opt-emoji">🌰</span>
+                  <div>
+                    <strong>짙은 딥 브라운 (그윽한 갈색)</strong>
+                    <p>밤톨처럼 차분하고 따뜻한 갈색이에요.</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_eye" value="winter">
+                <div class="option-content">
+                  <span class="opt-emoji">💎</span>
+                  <div>
+                    <strong>선명한 검은색 (또렷한 흑요석빛)</strong>
+                    <p>눈동자와 흰자의 대비가 아주 또렷해요.</p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q4: 자주 입는 옷 색상 및 선호 스타일 -->
+          <div class="quiz-card">
+            <div class="quiz-title">
+              <span class="q-num">Q4</span>
+              <h3>자주 입는 옷 색상과 좋아하는 옷 느낌은?</h3>
+            </div>
+            <div class="options-group">
+              <label class="option-card">
+                <input type="radio" name="q_style" value="spring" required>
+                <div class="option-content">
+                  <span class="opt-emoji">🐥</span>
+                  <div>
+                    <strong>맑은 노랑, 코랄, 연두색 옷 (봄 웜톤)</strong>
+                    <p>개나리처럼 톡톡 튀는 상큼발랄 생기 옷</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_style" value="summer">
+                <div class="option-content">
+                  <span class="opt-emoji">🦄</span>
+                  <div>
+                    <strong>파스텔 하늘, 라벤더, 핑크색 옷 (여름 쿨톤)</strong>
+                    <p>부드럽고 시원하며 청순하고 깨끗한 옷</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_style" value="autumn">
+                <div class="option-content">
+                  <span class="opt-emoji">🍁</span>
+                  <div>
+                    <strong>카키, 베이지, 브라운, 단풍색 옷 (가을 웜톤)</strong>
+                    <p>포근하고 차분하며 고급스러운 분위기 옷</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="option-card">
+                <input type="radio" name="q_style" value="winter">
+                <div class="option-content">
+                  <span class="opt-emoji">⚡</span>
+                  <div>
+                    <strong>핫핑크, 네이비, 블랙&화이트 옷 (겨울 쿨톤)</strong>
+                    <p>쨍하고 선명하며 또렷하고 멋진 시크 옷</p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="quiz-footer">
+          <button type="button" id="btn-diagnose" class="btn-primary-lg">
+            <span>퍼스널 컬러 진단 결과 보기</span> <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: 퍼스널 컬러 진단 결과 & TPO 선택 -->
+    <section id="step-2" class="step-section">
+      <div class="section-card">
+
+        <!-- Result Banner -->
+        <div id="result-banner" class="result-banner">
+          <div class="banner-badge" id="res-badge">봄 웜톤 🌸</div>
+          <h2 id="res-title">햇살처럼 따뜻하고 생기 넘치는 봄 웜톤!</h2>
+          <p id="res-desc" class="banner-desc">
+            개나리와 봄꽃처럼 맑고 상큼한 매력을 가진 당신! 노란빛이 도는 따뜻하고 화사한 컬러가 얼굴을 더욱 생기 있게 밝혀줍니다.
+          </p>
+        </div>
+
+        <!-- Color Palette Displays (Best vs Worst) -->
+        <div class="palette-container">
+          <!-- Best Colors -->
+          <div class="palette-card best-palette">
+            <div class="palette-header">
+              <h3><i class="fa-solid fa-heart" style="color:#ff4757;"></i> 베스트 컬러 팔레트 (찰떡 색상)</h3>
+              <p>나를 가장 눈부시게 만드는 찰떡 베스트 색상들이에요!</p>
+            </div>
+            <div id="best-chips-grid" class="color-chips-grid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Worst Colors -->
+          <div class="palette-card worst-palette">
+            <div class="palette-header">
+              <h3><i class="fa-solid fa-triangle-exclamation" style="color:#ffa502;"></i> 피해야 할 워스트 컬러</h3>
+              <p>얼굴이 칙칙해 보이거나 피곤해 보일 수 있는 주의할 색상이에요.</p>
+            </div>
+            <div id="worst-chips-grid" class="color-chips-grid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 📸 Virtual Fitting Studio (카메라 촬영 & 퍼스널 컬러/의상/헤어 합성) -->
+        <div class="fitting-studio-card">
+          <div class="studio-header">
+            <span class="step-badge alt"><i class="fa-solid fa-camera"></i> 피팅 스튜디오</span>
+            <h2>📸 찰칵! 내 사진에 컬러 & 의상 입혀보기</h2>
+            <p>카메라로 내 얼굴을 촬영하거나 사진을 업로드해서 퍼스널 컬러 천과 예쁜 TPO 의상을 입혀보세요!</p>
+          </div>
+
+          <div class="studio-workspace">
+            <!-- Left: Camera & Canvas Viewport -->
+            <div class="studio-viewport-box">
+              <div id="camera-container" class="camera-container">
+                <video id="webcam-video" autoplay playsinline class="webcam-stream"></video>
+                <canvas id="fitting-canvas" width="450" height="450" class="fitting-canvas"></canvas>
+                <div id="camera-placeholder" class="camera-placeholder">
+                  <span class="cam-icon">📸</span>
+                  <p>카메라를 켜거나 내 사진을 업로드해 보세요!</p>
+                </div>
+              </div>
+
+              <div class="camera-controls">
+                <button type="button" id="btn-start-cam" class="btn-secondary-sm">
+                  <i class="fa-solid fa-video"></i> 카메라 켜기
+                </button>
+                <button type="button" id="btn-capture-photo" class="btn-primary-sm" style="display:none;">
+                  <i class="fa-solid fa-camera"></i> 사진 촬영하기
+                </button>
+                <label for="input-upload-photo" class="btn-accent-sm" style="cursor:pointer;">
+                  <i class="fa-solid fa-upload"></i> 사진 업로드
+                  <input type="file" id="input-upload-photo" accept="image/*" style="display:none;">
+                </label>
+                <button type="button" id="btn-retake-photo" class="btn-secondary-sm" style="display:none;">
+                  <i class="fa-solid fa-rotate"></i> 다시 찍기
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Overlay Items & Controls -->
+            <div class="studio-controls-box">
+
+              <!-- Studio Tabs -->
+              <div class="studio-tabs">
+                <button type="button" class="tab-btn active" data-tab="tab-drape">
+                  🎨 컬러 드레이핑
+                </button>
+                <button type="button" class="tab-btn" data-tab="tab-hair">
+                  💇‍♀️ 헤어 & 모자
+                </button>
+                <button type="button" class="tab-btn" data-tab="tab-outfit">
+                  👕 TPO 의상
+                </button>
+              </div>
+
+              <!-- Tab 1: Color Drapes -->
+              <div id="tab-drape" class="tab-content active">
+                <h4><i class="fa-solid fa-palette"></i> 어깨에 퍼스널 컬러 천 대보기</h4>
+                <p class="tab-desc">얼굴 아래 어깨 부분에 내 베스트/워스트 컬러 천을 대보고 얼굴이 살아나는지 확인해요!</p>
+                <div id="drape-swatch-list" class="drape-swatch-list">
+                  <!-- Dynamically populated from best/worst colors -->
+                </div>
+              </div>
+
+              <!-- Tab 2: Hairstyles -->
+              <div id="tab-hair" class="tab-content">
+                <h4><i class="fa-solid fa-scissors"></i> 헤어스타일 & 악세사리</h4>
+                <p class="tab-desc">어울리는 헤어스타일과 귀여운 머리 핀, 모자를 입혀보세요.</p>
+                <div class="overlay-items-grid" id="hair-items-grid">
+                  <div class="overlay-thumb" data-item="hair_spring_bob">
+                    <span class="item-emoji">💇‍♀️</span>
+                    <span>상큼 단발</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="hair_summer_wavy">
+                    <span class="item-emoji">👧</span>
+                    <span>양갈래 핑크</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="hair_autumn_brown">
+                    <span class="item-emoji">👦</span>
+                    <span>꿀빛 웨이브</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="hair_winter_chic">
+                    <span class="item-emoji">🧑</span>
+                    <span>시크 숏컷</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="item_cap">
+                    <span class="item-emoji">🧢</span>
+                    <span>응원 스포티 캡</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="item_crown">
+                    <span class="item-emoji">👑</span>
+                    <span>파티 왕관</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="item_bow">
+                    <span class="item-emoji">🎀</span>
+                    <span>러블리 리본</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 3: Outfits -->
+              <div id="tab-outfit" class="tab-content">
+                <h4><i class="fa-solid fa-vest"></i> TPO 상황별 의상</h4>
+                <p class="tab-desc">상황에 딱 맞는 코디 의상을 합성해보세요!</p>
+                <div class="overlay-items-grid" id="outfit-items-grid">
+                  <div class="overlay-thumb" data-item="outfit_presentation">
+                    <span class="item-emoji">👔</span>
+                    <span>발표회 셔츠&조끼</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="outfit_fieldtrip">
+                    <span class="item-emoji">🧥</span>
+                    <span>소풍 바람막이</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="outfit_sports">
+                    <span class="item-emoji">🎽</span>
+                    <span>체육대회 유니폼</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="outfit_party">
+                    <span class="item-emoji">👗</span>
+                    <span>파티 드레스/슈트</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="outfit_art">
+                    <span class="item-emoji">🎨</span>
+                    <span>미술 미술앞치마</span>
+                  </div>
+                  <div class="overlay-thumb" data-item="outfit_daily">
+                    <span class="item-emoji">👕</span>
+                    <span>데일리 캐주얼</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item Fine-Tuning Adjustment Sliders -->
+              <div class="adjustment-panel">
+                <div class="adj-header">
+                  <span><i class="fa-solid fa-sliders"></i> 위치 & 크기 세밀 조절</span>
+                  <button type="button" id="btn-clear-overlay" class="btn-secondary-sm">&times; 레이어 삭제</button>
+                </div>
+                
+                <div class="adj-slider-row">
+                  <label><i class="fa-solid fa-expand"></i> 크기</label>
+                  <input type="range" id="slider-scale" min="0.4" max="2.0" step="0.05" value="1.0">
+                </div>
+
+                <div class="adj-slider-row">
+                  <label><i class="fa-solid fa-up-down"></i> 상하 위치</label>
+                  <input type="range" id="slider-pos-y" min="-150" max="150" step="2" value="0">
+                </div>
+
+                <div class="adj-slider-row">
+                  <label><i class="fa-solid fa-left-right"></i> 좌우 위치</label>
+                  <input type="range" id="slider-pos-x" min="-150" max="150" step="2" value="0">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- TPO Selection Form -->
+        <div class="tpo-form-card">
+          <div class="tpo-header">
+            <span class="step-badge alt">2단계</span>
+            <h2>어떤 TPO 상황에 어울리는 리포트를 만들까요? 👕</h2>
+            <p>상황(Time, Place, Occasion)과 함께 어울리는 멋진 추천 코디와 상대방 배려 꿀팁을 받아보세요.</p>
+          </div>
+
+          <div class="tpo-input-grid">
+            <div class="input-group">
+              <label for="student-name"><i class="fa-solid fa-user"></i> 학생 이름 / 닉네임</label>
+              <input type="text" id="student-name" placeholder="예: 김민준" value="민준이" required>
+            </div>
+
+            <div class="input-group">
+              <label for="tpo-select"><i class="fa-solid fa-shirt"></i> TPO 상황 선택</label>
+              <select id="tpo-select" class="tpo-dropdown">
+                <option value="presentation">🏫 학습 발표회 / 무대 발표 (단정하고 돋보이는 룩)</option>
+                <option value="field_trip">🌳 야외 체험학습 / 소풍 (활동적이고 사진 잘 나오는 룩)</option>
+                <option value="sports_day">🏃‍♂️ 체육대회 / 운동회 (에너지 넘치는 응원 룩)</option>
+                <option value="birthday_party">🎂 친구 생일 파티 (센스 있고 축하해주는 룩)</option>
+                <option value="art_club">🎨 미술 / 동아리 활동 (창의적이고 편안한 룩)</option>
+                <option value="daily_school">🎒 즐거운 매일 등교룩 (상쾌한 데일리 룩)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="tpo-actions">
+            <button type="button" id="btn-back-step1" class="btn-secondary-lg">
+              <i class="fa-solid fa-arrow-left"></i> 다시 진단하기
+            </button>
+            <button type="button" id="btn-generate-report" class="btn-primary-lg highlight-pulse">
+              <span>Gemini AI 리포트 생성하기</span> <i class="fa-solid fa-sparkles"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STEP 3: 최종 리포트 카드 & 저장/갤러리 공유 -->
+    <section id="step-3" class="step-section">
+      <div class="section-card no-padding">
+
+        <!-- Report Card Actions Top Toolbar -->
+        <div class="report-toolbar">
+          <div class="toolbar-info">
+            <i class="fa-solid fa-circle-check" style="color: #2ed573;"></i>
+            <span>스타일 리포트가 성공적으로 생성되었습니다!</span>
+          </div>
+          <div class="toolbar-buttons">
+            <button id="btn-download-png" class="btn-action btn-png">
+              <i class="fa-solid fa-file-image"></i> 이미지 저장
+            </button>
+            <button id="btn-download-pdf" class="btn-action btn-pdf">
+              <i class="fa-solid fa-file-pdf"></i> PDF 다운로드
+            </button>
+            <button id="btn-share-gallery" class="btn-action btn-gallery">
+              <i class="fa-solid fa-paper-plane"></i> 학급 갤러리 전송
+            </button>
+            <button id="btn-retry-tpo" class="btn-action btn-retry">
+              <i class="fa-solid fa-rotate-left"></i> 다른 TPO 선택
+            </button>
+          </div>
+        </div>
+
+        <!-- Printable / Viewable Certificate Card -->
+        <div class="report-card-wrapper">
+          <div id="report-printable-card" class="report-printable-card">
+
+            <!-- Watermark / Decorative Seal -->
+            <div class="card-seal">
+              <span class="seal-icon">🏆</span>
+              <span>퍼스널 스타일 인증</span>
+            </div>
+
+            <!-- Card Header -->
+            <div class="card-header">
+              <div class="card-header-left">
+                <span class="card-tag">나의 퍼스널 컬러 & TPO 스타일 리포트</span>
+                <h2 id="card-student-title">김민준 어린이의 맞춤 스타일 리포트</h2>
+                <div class="card-meta">
+                  <span id="card-date"><i class="fa-regular fa-calendar"></i> 2026.08.01</span>
+                  <span class="dot">•</span>
+                  <span>행복한 초등학교 🌈</span>
+                </div>
+              </div>
+              <div id="card-tone-badge-big" class="tone-badge-big spring">
+                <span class="badge-emoji" id="card-badge-emoji">🌸</span>
+                <div id="card-tone-name">봄 웜톤</div>
+              </div>
+            </div>
+
+            <!-- Card Grid Content -->
+            <div class="card-body-grid">
+
+              <!-- Left Side: Student Photo Avatar, Diagnosis Summary & Color Palette Chips -->
+              <div class="card-left-col">
+
+                <!-- Student Fitted Photo Before & After Comparison Frame -->
+                <div class="card-block avatar-block">
+                  <h4 class="block-title"><i class="fa-solid fa-code-compare"></i> 나만의 퍼스널 Before & After</h4>
+                  <div class="ba-card-comparison-box">
+                    <div class="ba-photo-item">
+                      <span class="ba-tag before">BEFORE (원본)</span>
+                      <img id="card-before-photo" src="" alt="원본 사진" class="ba-card-img">
+                      <div id="card-before-placeholder" class="ba-placeholder"><span>📷</span><span>원본</span></div>
+                    </div>
+                    <div class="ba-photo-item">
+                      <span class="ba-tag after">AFTER (베스트)</span>
+                      <img id="card-after-photo" src="" alt="찰떡 톤 피팅" class="ba-card-img">
+                      <div id="card-after-placeholder" class="ba-placeholder"><span>✨</span><span>찰떡 피팅</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h4 class="block-title"><i class="fa-solid fa-palette"></i> 퍼스널 컬러 진단 결과</h4>
+                  <div class="tone-summary-box" id="card-tone-summary">
+                    개나리와 봄꽃처럼 맑고 상큼한 매력을 가진 봄 웜톤! 노란빛이 도는 따뜻한 컬러가 얼굴을 한층 더 화사하게 만들어 줍니다.
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h4 class="block-title"><i class="fa-solid fa-thumbs-up" style="color:#2ed573;"></i> 추천 베스트 컬러 칩</h4>
+                  <div id="card-best-chips" class="mini-chips-row">
+                    <!-- Dynamic mini chips -->
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h4 class="block-title"><i class="fa-solid fa-shield-cat" style="color:#ff6b6b;"></i> 조심해야 할 워스트 컬러</h4>
+                  <div id="card-worst-chips" class="mini-chips-row">
+                    <!-- Dynamic mini chips -->
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right Side: TPO Outfit Recommendation & Consideration Tip -->
+              <div class="card-right-col">
+
+                <div class="card-block tpo-highlight-block">
+                  <div class="tpo-badge-tag" id="card-tpo-badge"><i class="fa-solid fa-location-dot"></i> 🏫 학습 발표회 룩</div>
+                  
+                  <h3 class="recommend-heading">✨ Gemini AI 스타일 코디 추천</h3>
+                  <div id="card-ai-recommendation" class="ai-text-content">
+                    <p class="ai-loading-text"><i class="fa-solid fa-spinner fa-spin"></i> AI가 학생만을 위한 예쁜 코디 문장을 작성하고 있어요...</p>
+                  </div>
+
+                  <div class="tip-card-box">
+                    <div class="tip-box-title">
+                      <i class="fa-solid fa-heart-pulse"></i> <span>상대방을 배려하는 코디 한 줄 조언</span>
+                    </div>
+                    <div id="card-ai-tip" class="tip-text-content">
+                      친구와 함께 발표할 때는 너무 화려한 장식보다는 서로의 의상 색상이 따뜻하게 잘 어우러지도록 마음을 모아보세요!
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer">
+              <div class="footer-note">
+                <i class="fa-solid fa-sparkles"></i> 나의 개성을 살리고 친구를 배려하는 멋진 초등 스타일리스트!
+              </div>
+              <div class="footer-signature">
+                <span>담당 AI 스타일 코디네이터 Teacher</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Personal Color Theory & Scientific Sources Modal -->
+  <div id="modal-theory" class="modal-overlay">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-book-open" style="color:var(--primary-color);"></i> 📚 퍼스널 컬러 진단 원리 & 학술·교육적 출처</h3>
+        <button class="btn-close-modal" id="btn-close-theory">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="theory-guide-box">
+          <div class="theory-section">
+            <h4><i class="fa-solid fa-graduation-cap"></i> 1. 요하네스 이텐(Johannes Itten)의 4계절 색채 이론</h4>
+            <p>
+              스위스의 저명한 색채학자이자 바우하우스(Bauhaus) 교수로 재직한 <strong>요하네스 이텐</strong>이 1928년 창안한 <em>'사계절 색채 이론(Four Season Color Theory)'</em>을 기반으로 합니다.<br>
+              사람의 고유한 신체 색(피부 톤, 눈동자 색, 머리카락 색)의 온도감(Warm/Cool)과 명도·채도 조화에 따라 <strong>봄(Spring Warm), 여름(Summer Cool), 가을(Autumn Warm), 겨울(Winter Cool)</strong> 4가지 계절 유형으로 체계화하여 진단합니다.
+            </p>
+          </div>
+
+          <div class="theory-section">
+            <h4><i class="fa-solid fa-sliders"></i> 2. KS (한국표준색표계) & PCCS 언더톤 분석 원리</h4>
+            <p>
+              본 시스템은 <strong>KS(Korean Standard) 색표계</strong> 및 <strong>PCCS(Practical Color Co-ordinate System)</strong>의 색 3속성(색상, 명도, 채도)에 의거하여 평가됩니다.
+            </p>
+            <ul class="theory-list">
+              <li><strong>언더톤 베이스 (Undertone)</strong>: 피부 속 멜라닌과 카로틴, 혈관 안 헤모글로빈 비율에 따라 옐로우 베이스(Warm)와 블루/핑크 베이스(Cool)로 구분합니다.</li>
+              <li><strong>명도 5단계 (Value Spectrum)</strong>: 13호(매우 밝음)부터 25호(또렷한 딥)까지 5단계 명도 필터로 피부 맑기와 반사율을 측정합니다.</li>
+              <li><strong>드레이핑(Draping) 평가법</strong>: 어깨 위에 대어본 색상 천이 얼굴의 그늘을 없애고 턱 선을 또렷하게 밝혀주는 찰떡 베스트 색상을 도출합니다.</li>
+            </ul>
+          </div>
+
+          <div class="theory-section">
+            <h4><i class="fa-solid fa-school"></i> 3. 2022 개정 초등학교 미술과 교육과정 연계</h4>
+            <p>
+              교육부 2022 개정 미술과 교육과정 <strong>[초등 3~4학년: 색의 3속성과 감성 / 5~6학년: 나를 표현하는 색채 디자인]</strong> 성취기준에 입각하여 개발되었습니다.<br>
+              학생이 자신의 개성을 존중하는 동시에, TPO 상황에 맞춰 <strong>'상대방을 배려하는 코디 언어'</strong>를 실습하며 사회적·감성적 역량을 배양할 수 있도록 기획되었습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-theory-footer" class="btn-primary-sm">확인했습니다</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gemini API Key Setting Modal -->
+  <div id="modal-api" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-key"></i> Gemini API 키 설정</h3>
+        <button class="btn-close-modal" id="btn-close-api">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Google Gemini API Key를 입력하면 실시간으로 구글 Gemini AI 모델이 퍼스널 컬러와 TPO를 조합한 추천 문장을 생성합니다.</p>
+        <p class="modal-subtext">* API 키가 없어도 내장된 스마트 AI 추천 엔진으로 바로 이용 가능합니다!</p>
+        <div class="input-group" style="margin-top: 15px;">
+          <label for="input-gemini-key">Gemini API Key</label>
+          <input type="password" id="input-gemini-key" placeholder="AIzaSy..." autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-clear-api-key" class="btn-secondary-sm">키 삭제</button>
+        <button id="btn-save-api-key" class="btn-primary-sm">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Class Gallery Modal (학급 갤러리) -->
+  <div id="modal-gallery" class="modal-overlay">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-images"></i> 🏫 우리 학급 퍼스널 컬러 & TPO 갤러리</h3>
+        <button class="btn-close-modal" id="btn-close-gallery">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="gallery-subtext">우리 반 친구들이 만든 스타일 리포트를 둘러보고 따뜻한 하트와 칭찬 스티커를 전해주세요! 💖</p>
+        
+        <div id="gallery-grid" class="gallery-cards-grid">
+          <!-- Dynamically populated saved reports -->
+        </div>
+
+        <div id="gallery-empty" class="gallery-empty-state">
+          <span class="empty-icon">🎨</span>
+          <p>아직 학급 갤러리에 제출된 리포트가 없어요.<br>나만의 리포트를 만들고 첫 번째로 전송해 보세요!</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-gallery-footer" class="btn-secondary-sm">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay for AI Generation -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner-box">
+      <div class="magic-wand-spinner">🪄</div>
+      <h3 id="loading-text">Gemini AI가 퍼스널 컬러와 TPO를 조합 중이에요...</h3>
+      <p>친근한 초등학생 어조로 3문장 이내 코디를 만드는 중!</p>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>
