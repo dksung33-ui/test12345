@@ -582,22 +582,6 @@ document.addEventListener('DOMContentLoaded', () => {
       liveMirrorCtx.closePath();
       liveMirrorCtx.fill();
 
-      liveMirrorCtx.strokeStyle = 'rgba(0,0,0,0.18)';
-      liveMirrorCtx.lineWidth = 5;
-      liveMirrorCtx.stroke();
-
-      liveMirrorCtx.fillStyle = '#ffffff';
-      liveMirrorCtx.shadowColor = 'rgba(0,0,0,0.3)';
-      liveMirrorCtx.shadowBlur = 8;
-      liveMirrorCtx.roundRect(175, 485, 190, 38, 14);
-      liveMirrorCtx.fill();
-      liveMirrorCtx.shadowBlur = 0;
-
-      liveMirrorCtx.fillStyle = '#1e293b';
-      liveMirrorCtx.font = 'bold 15px "Jua", cursive';
-      liveMirrorCtx.textAlign = 'center';
-      liveMirrorCtx.fillText(`🎨 ${liveMirrorState.drapeName}`, 270, 510);
-
       liveMirrorCtx.restore();
     }
 
