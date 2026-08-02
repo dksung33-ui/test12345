@@ -397,18 +397,98 @@ document.addEventListener('DOMContentLoaded', () => {
       if (clothStyleVal && DRAPE_PALETTE_DICT[clothStyleVal]) {
         liveMirrorState.drapeHex = DRAPE_PALETTE_DICT[clothStyleVal].hex;
         liveMirrorState.drapeName = DRAPE_PALETTE_DICT[clothStyleVal].name;
+        fireToneConfetti(DRAPE_PALETTE_DICT[clothStyleVal].hex);
+        playChimeSound();
       }
       if (drapeKeyVal && DRAPE_PALETTE_DICT[drapeKeyVal]) {
         liveMirrorState.drapeKey = drapeKeyVal;
         liveMirrorState.drapeHex = DRAPE_PALETTE_DICT[drapeKeyVal].hex;
         liveMirrorState.drapeName = DRAPE_PALETTE_DICT[drapeKeyVal].name;
+        fireToneConfetti(DRAPE_PALETTE_DICT[drapeKeyVal].hex);
+        playChimeSound();
       }
-      if (brightVal) liveMirrorState.brightStep = brightVal;
-      if (undertoneVal) liveMirrorState.undertone = undertoneVal;
+      if (brightVal) {
+        liveMirrorState.brightStep = brightVal;
+        playChimeSound();
+      }
+      if (undertoneVal) {
+        liveMirrorState.undertone = undertoneVal;
+        playChimeSound();
+      }
 
       if (!liveMirrorState.isActive) drawMirrorFrame();
     });
   });
+
+  // --- Confetti & Web Audio Chime Sound FX ---
+  function playChimeSound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } catch (e) {
+      // Ignore audio errors if blocked by browser policy
+    }
+  }
+
+  // Floating Confetti Particles Animation
+  function fireToneConfetti(hexColor) {
+    const cCanvas = document.getElementById('confetti-canvas');
+    if (!cCanvas) return;
+    const ctx = cCanvas.getContext('2d');
+    cCanvas.width = window.innerWidth;
+    cCanvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = [hexColor || '#FF758C', '#FFD166', '#90E0EF', '#C77DFF', '#FF9F1C', '#10B981'];
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: window.innerWidth * (0.2 + Math.random() * 0.6),
+        y: window.innerHeight * (0.3 + Math.random() * 0.4),
+        r: Math.random() * 6 + 3,
+        dx: (Math.random() - 0.5) * 8,
+        dy: (Math.random() - 0.8) * 9,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 1.0,
+        decay: 0.02 + Math.random() * 0.02
+      });
+    }
+
+    function animConfetti() {
+      ctx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+      let alive = false;
+      particles.forEach(p => {
+        if (p.life > 0) {
+          alive = true;
+          p.x += p.dx;
+          p.y += p.dy;
+          p.dy += 0.25; // gravity
+          p.life -= p.decay;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fill();
+        }
+      });
+      ctx.globalAlpha = 1.0;
+      if (alive) requestAnimationFrame(animConfetti);
+      else ctx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+    }
+    animConfetti();
+  }
 
   // Auto Start Camera on Page Load
   initLiveMirrorCamera();
@@ -640,6 +720,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
     alert('📸 분장실 피팅 샷 촬영 완료! 최종 리포트 카드에 예쁘게 적용됩니다 🌟');
   });
+
+  // --- 📸 인생네컷 4분할 포토카드 생성기 ---
+  const btnSnap4cut = document.getElementById('btn-snap-4cut');
+  const modalPhotocard = document.getElementById('modal-photocard');
+  const btnClosePhotocard = document.getElementById('btn-close-photocard');
+  const btnClosePhotocardFooter = document.getElementById('btn-close-photocard-footer');
+  const btnDownloadPhotocard = document.getElementById('btn-download-photocard');
+  const photocardCanvas = document.getElementById('photocard-canvas');
+  const photocardCtx = photocardCanvas ? photocardCanvas.getContext('2d') : null;
+
+  btnSnap4cut.addEventListener('click', () => {
+    generate4CutPhotocard();
+    modalPhotocard.classList.add('active');
+    fireToneConfetti('#FF758C');
+  });
+
+  [btnClosePhotocard, btnClosePhotocardFooter].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        modalPhotocard.classList.remove('active');
+      });
+    }
+  });
+
+  btnDownloadPhotocard.addEventListener('click', () => {
+    if (!photocardCanvas) return;
+    const link = document.createElement('a');
+    link.download = `내_인생네컷_퍼스널컬러_포토카드.png`;
+    link.href = photocardCanvas.toDataURL('image/png');
+    link.click();
+  });
+
+  function generate4CutPhotocard() {
+    if (!photocardCtx) return;
+    photocardCtx.clearRect(0, 0, 300, 500);
+
+    // Frame Background
+    photocardCtx.fillStyle = '#ffffff';
+    photocardCtx.fillRect(0, 0, 300, 500);
+
+    const tones = [
+      { name: '봄 웜톤 🌸', color: '#FFD166' },
+      { name: '여름 쿨톤 🍦', color: '#90E0EF' },
+      { name: '가을 웜톤 🍁', color: '#E07A5F' },
+      { name: '겨울 쿨톤 ❄️', color: '#FF0054' }
+    ];
+
+    const currentImgData = liveMirrorCanvas.toDataURL('image/png');
+    const img = new Image();
+
+    img.onload = () => {
+      tones.forEach((tone, idx) => {
+        const yPos = 12 + idx * 106;
+
+        // Photo slot background
+        photocardCtx.save();
+        photocardCtx.fillStyle = tone.color;
+        photocardCtx.fillRect(15, yPos, 270, 96);
+
+        // Draw image
+        photocardCtx.drawImage(img, 15, yPos, 270, 96);
+
+        // Shoulder drape overlay
+        photocardCtx.fillStyle = tone.color;
+        photocardCtx.globalAlpha = 0.85;
+        photocardCtx.beginPath();
+        photocardCtx.moveTo(15, yPos + 96);
+        photocardCtx.bezierCurveTo(40, yPos + 60, 260, yPos + 60, 285, yPos + 96);
+        photocardCtx.closePath();
+        photocardCtx.fill();
+        photocardCtx.globalAlpha = 1.0;
+
+        // Tone label pill
+        photocardCtx.fillStyle = 'rgba(0,0,0,0.55)';
+        photocardCtx.roundRect(25, yPos + 8, 100, 20, 8);
+        photocardCtx.fill();
+        photocardCtx.fillStyle = '#ffffff';
+        photocardCtx.font = 'bold 11px sans-serif';
+        photocardCtx.fillText(tone.name, 32, yPos + 22);
+
+        photocardCtx.restore();
+      });
+
+      // Bottom Brand Watermark Footer
+      photocardCtx.fillStyle = '#1e293b';
+      photocardCtx.font = 'bold 14px "Jua", cursive';
+      photocardCtx.textAlign = 'center';
+      photocardCtx.fillText('📸 초등 퍼스널 컬러 인생네컷', 150, 452);
+
+      photocardCtx.fillStyle = '#64748b';
+      photocardCtx.font = '11px sans-serif';
+      const todayStr = new Date().toISOString().slice(0, 10);
+      photocardCtx.fillText(`${todayStr} | 나만의 퍼스널 톤 피팅스튜디오`, 150, 472);
+    };
+
+    img.src = currentImgData;
+  }
 
   // --- Virtual Fitting Studio Logic ---
   const studioState = {
@@ -1243,11 +1420,20 @@ document.addEventListener('DOMContentLoaded', () => {
       galleryGrid.innerHTML = list.map(item => `
         <div class="gallery-item-card">
           <div class="g-card-header">
-            <span class="g-student-name">${item.studentName}</span>
+            <span class="g-student-name">🧑‍🎓 ${item.studentName} 학생</span>
             <span class="g-tone-tag">${item.toneName}</span>
           </div>
           <div class="g-tpo-badge">${item.tpoName}</div>
           <div class="g-ai-snippet">${item.recommendationSnippet}</div>
+
+          <!-- Peer Compliment Sticker Badges -->
+          <div class="g-stickers-row" style="display:flex; gap:4px; margin: 8px 0; flex-wrap:wrap;">
+            <button type="button" class="btn-sticker-chip" onclick="window.stickerGalleryReport(${item.id}, '⭐ 찰떡!')">⭐ 찰떡! (${item.stickers && item.stickers['⭐ 찰떡!'] ? item.stickers['⭐ 찰떡!'] : 0})</button>
+            <button type="button" class="btn-sticker-chip" onclick="window.stickerGalleryReport(${item.id}, '🌸 상큼!')">🌸 상큼! (${item.stickers && item.stickers['🌸 상큼!'] ? item.stickers['🌸 상큼!'] : 0})</button>
+            <button type="button" class="btn-sticker-chip" onclick="window.stickerGalleryReport(${item.id}, '👑 주인공!')">👑 주인공! (${item.stickers && item.stickers['👑 주인공!'] ? item.stickers['👑 주인공!'] : 0})</button>
+            <button type="button" class="btn-sticker-chip" onclick="window.stickerGalleryReport(${item.id}, '🔥 멋쟁이!')">🔥 멋쟁이! (${item.stickers && item.stickers['🔥 멋쟁이!'] ? item.stickers['🔥 멋쟁이!'] : 0})</button>
+          </div>
+
           <div class="g-card-footer">
             <span style="font-size:0.75rem; color:#a0aec0;">${item.createdAt}</span>
             <button class="btn-heart" onclick="window.likeGalleryReport(${item.id})">
@@ -1259,6 +1445,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Peer Compliment Sticker Handler
+  window.stickerGalleryReport = function(id, stickerKey) {
+    const list = getGalleryData();
+    const item = list.find(r => r.id === id);
+    if (item) {
+      if (!item.stickers) item.stickers = {};
+      item.stickers[stickerKey] = (item.stickers[stickerKey] || 0) + 1;
+      localStorage.setItem('class_gallery_reports', JSON.stringify(list));
+      renderGalleryItems();
+      fireToneConfetti('#FF758C');
+      playChimeSound();
+    }
+  };
+
   // Like Function attached to window
   window.likeGalleryReport = function(id) {
     const list = getGalleryData();
@@ -1268,6 +1468,8 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('class_gallery_reports', JSON.stringify(list));
       const cntSpan = document.getElementById(`like-cnt-${id}`);
       if (cntSpan) cntSpan.textContent = item.likes;
+      fireToneConfetti('#FF0054');
+      playChimeSound();
     }
   };
 

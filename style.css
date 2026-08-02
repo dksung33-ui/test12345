@@ -1917,3 +1917,23 @@ button, input, select {
   70% { box-shadow: 0 0 0 15px rgba(92, 103, 242, 0); }
   100% { box-shadow: 0 0 0 0 rgba(92, 103, 242, 0); }
 }
+
+/* Peer Compliment Sticker Chips */
+.btn-sticker-chip {
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-sticker-chip:hover {
+  background: #ff758c;
+  color: #ffffff;
+  border-color: #ff758c;
+  transform: translateY(-2px);
+}

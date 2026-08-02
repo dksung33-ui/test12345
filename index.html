@@ -119,11 +119,14 @@
               </div>
 
               <!-- Mirror Controls Toolbar (Beneath Left Mirror) -->
-              <div class="vanity-toolbar left-toolbar" style="margin-top: 16px;">
+              <div class="vanity-toolbar left-toolbar" style="margin-top: 16px; flex-wrap: wrap; gap: 8px;">
                 <button type="button" id="btn-snap-mirror" class="btn-primary-sm highlight-pulse">
                   <i class="fa-solid fa-camera-retro"></i> 📸 피팅 샷 찰칵!
                 </button>
-                <button type="button" id="btn-toggle-ba" class="btn-accent-sm">
+                <button type="button" id="btn-snap-4cut" class="btn-accent-sm highlight-pulse" style="background: linear-gradient(135deg, #FF758C, #FF7EB3);">
+                  <i class="fa-solid fa-film"></i> 📸 인생네컷 4분할 찰칵!
+                </button>
+                <button type="button" id="btn-toggle-ba" class="btn-secondary-sm">
                   <i class="fa-solid fa-code-compare"></i> 🔍 Before & After 비교
                 </button>
                 <button type="button" id="btn-toggle-mirror-cam" class="btn-secondary-sm">
@@ -909,6 +912,31 @@
       </div>
     </div>
   </div>
+
+  <!-- 4-Cut Photocard Modal (인생네컷 포토카드) -->
+  <div id="modal-photocard" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-film" style="color:#FF758C;"></i> 📸 나만의 인생네컷 4분할 포토카드</h3>
+        <button class="btn-close-modal" id="btn-close-photocard">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align:center;">
+        <p class="modal-subtext">봄🌸, 여름🍦, 가을🍁, 겨울❄️ 4가지 퍼스널 톤이 한눈에 쏙 담긴 인생네컷 포토카드 완성!</p>
+        <div class="photocard-frame-box" style="margin: 15px auto; max-width: 320px; border-radius: 18px; padding: 12px; background: linear-gradient(135deg, #FF758C, #FF7EB3); box-shadow: 0 10px 25px rgba(255, 117, 140, 0.3);">
+          <canvas id="photocard-canvas" width="300" height="500" style="width:100%; border-radius: 12px; background: #fff;"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button id="btn-close-photocard-footer" class="btn-secondary-sm">닫기</button>
+        <button id="btn-download-photocard" class="btn-primary-sm" style="background: linear-gradient(135deg, #FF758C, #FF7EB3);">
+          <i class="fa-solid fa-download"></i> 포토카드 다운로드
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti FX Canvas Overlay -->
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;"></canvas>
 
   <!-- Loading Overlay for AI Generation -->
   <div id="loading-overlay" class="loading-overlay">
