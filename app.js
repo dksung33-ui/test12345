@@ -341,6 +341,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const DRAPE_PALETTE_DICT = {
+    // TPO Outfit Styles & Colors
+    pres_yellow: { hex: '#FFD166', name: '발표회 햇살 옐로우 셔츠' },
+    pres_blue: { hex: '#90E0EF', name: '발표회 파스텔 블루 조끼' },
+    trip_coral: { hex: '#FF9F1C', name: '체험학습 생기 코랄 바람막이' },
+    trip_khaki: { hex: '#81B29A', name: '체험학습 숲속 카키 점퍼' },
+    sports_yellow: { hex: '#FFE066', name: '체육대회 개나리 유니폼' },
+    sports_blue: { hex: '#0077B6', name: '체육대회 코발트 블루 유니폼' },
+    party_pink: { hex: '#FF85A1', name: '생일파티 핑크 로즈 드레스' },
+    party_purple: { hex: '#7209B7', name: '생일파티 로열 퍼플 슈트' },
+    daily_cream: { hex: '#FFF3BF', name: '매일 등교 크림 티셔츠' },
+    daily_navy: { hex: '#1D3557', name: '매일 등교 딥 네이비 맨투맨' },
+
+    // Seasonal Drapes
     spring_yellow: { hex: '#FFD166', name: '봄 햇살 옐로우' },
     spring_coral: { hex: '#FF9F1C', name: '봄 생기 코랄' },
     summer_lavender: { hex: '#C77DFF', name: '여름 라벤더' },
@@ -366,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Fit Chip Item Handlers (Brightness, Undertone, Drape Palette, Feature Tone)
+  // Fit Chip Item Handlers (Outfit Styles, Drape Palette, Skin Brightness, Undertone)
   const fitChipItems = document.querySelectorAll('.fit-chip-item');
   fitChipItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -376,19 +389,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       item.classList.add('active');
 
+      const clothStyleVal = item.getAttribute('data-cloth-style');
+      const drapeKeyVal = item.getAttribute('data-drape-key');
       const brightVal = item.getAttribute('data-bright');
       const undertoneVal = item.getAttribute('data-undertone');
-      const drapeKeyVal = item.getAttribute('data-drape-key');
-      const featureVal = item.getAttribute('data-feature');
 
-      if (brightVal) liveMirrorState.brightStep = brightVal;
-      if (undertoneVal) liveMirrorState.undertone = undertoneVal;
+      if (clothStyleVal && DRAPE_PALETTE_DICT[clothStyleVal]) {
+        liveMirrorState.drapeHex = DRAPE_PALETTE_DICT[clothStyleVal].hex;
+        liveMirrorState.drapeName = DRAPE_PALETTE_DICT[clothStyleVal].name;
+      }
       if (drapeKeyVal && DRAPE_PALETTE_DICT[drapeKeyVal]) {
         liveMirrorState.drapeKey = drapeKeyVal;
         liveMirrorState.drapeHex = DRAPE_PALETTE_DICT[drapeKeyVal].hex;
         liveMirrorState.drapeName = DRAPE_PALETTE_DICT[drapeKeyVal].name;
       }
-      if (featureVal) liveMirrorState.featureItem = featureVal;
+      if (brightVal) liveMirrorState.brightStep = brightVal;
+      if (undertoneVal) liveMirrorState.undertone = undertoneVal;
 
       if (!liveMirrorState.isActive) drawMirrorFrame();
     });
@@ -581,53 +597,6 @@ document.addEventListener('DOMContentLoaded', () => {
       liveMirrorCtx.font = 'bold 15px "Jua", cursive';
       liveMirrorCtx.textAlign = 'center';
       liveMirrorCtx.fillText(`🎨 ${liveMirrorState.drapeName}`, 270, 510);
-
-      liveMirrorCtx.restore();
-    }
-
-    // 4. Draw AFTER Layer: Hair & Eye Tone Match Overlay
-    if (liveMirrorState.featureItem) {
-      const { scale, posX, posY } = liveMirrorState;
-      const feat = liveMirrorState.featureItem;
-
-      liveMirrorCtx.save();
-
-      if (feat.startsWith('eye_')) {
-        let irisColor = '#B37D4E';
-        if (feat === 'eye_chestnut') irisColor = '#4A2C11';
-        else if (feat === 'eye_vivid_black') irisColor = '#111111';
-
-        const eyeY = 220 + posY;
-        const leftEyeX = 205 + posX;
-        const rightEyeX = 335 + posX;
-        const eyeRadius = 16 * scale;
-
-        [leftEyeX, rightEyeX].forEach(ex => {
-          liveMirrorCtx.beginPath();
-          liveMirrorCtx.arc(ex, eyeY, eyeRadius, 0, Math.PI * 2);
-          liveMirrorCtx.strokeStyle = irisColor;
-          liveMirrorCtx.lineWidth = 4;
-          liveMirrorCtx.stroke();
-
-          liveMirrorCtx.beginPath();
-          liveMirrorCtx.arc(ex - 4, eyeY - 4, 3, 0, Math.PI * 2);
-          liveMirrorCtx.fillStyle = 'rgba(255,255,255,0.7)';
-          liveMirrorCtx.fill();
-        });
-      } else if (feat.startsWith('hair_')) {
-        let hairEmoji = '💇‍♀️';
-        if (feat === 'hair_soft_brown') hairEmoji = '👧';
-        else if (feat === 'hair_deep_brown') hairEmoji = '👦';
-        else if (feat === 'hair_black') hairEmoji = '🧑';
-
-        liveMirrorCtx.translate(270 + posX, 120 + posY);
-        liveMirrorCtx.scale(scale, scale);
-
-        liveMirrorCtx.font = '120px sans-serif';
-        liveMirrorCtx.textAlign = 'center';
-        liveMirrorCtx.textBaseline = 'middle';
-        liveMirrorCtx.fillText(hairEmoji, 0, 0);
-      }
 
       liveMirrorCtx.restore();
     }

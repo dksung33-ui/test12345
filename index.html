@@ -129,38 +129,111 @@
                 <button type="button" id="btn-toggle-mirror-cam" class="btn-secondary-sm">
                   <i class="fa-solid fa-video"></i> 카메라 켜기/끄기
                 </button>
-              </div>
-
-              <!-- Before & After Split Range Bar (visible when BA comparison is active) -->
-              <div id="ba-split-control-box" class="ba-split-control-box" style="display:none;">
-                <div class="ba-labels">
-                  <span class="badge-before">◀ BEFORE (원본/워스트)</span>
-                  <span class="ba-hint">슬라이더를 좌우로 끌어보세요!</span>
-                  <span class="badge-after">AFTER (베스트 톤) ▶</span>
-                </div>
-                <input type="range" id="ba-split-slider" min="0" max="100" value="50" class="ba-split-slider">
-              </div>
-
-              <!-- Categorized Fitting Tabs -->
+                       <!-- Categorized Fitting Tabs -->
               <div class="fitting-tab-nav">
-                <button type="button" class="f-tab-btn active" data-ftab="ftab-skin-step">
-                  💡 피부 명도 단계
-                </button>
-                <button type="button" class="f-tab-btn" data-ftab="ftab-undertone">
-                  🌡️ 웜톤/쿨톤 온도
+                <button type="button" class="f-tab-btn active" data-ftab="ftab-outfit-styles">
+                  👕 다양한 옷 & 색상 비교
                 </button>
                 <button type="button" class="f-tab-btn" data-ftab="ftab-drape-palette">
                   🎨 계절별 컬러 천
                 </button>
-                <button type="button" class="f-tab-btn" data-ftab="ftab-hair-eye">
-                  💇‍♀️ 머리 & 눈동자 톤
+                <button type="button" class="f-tab-btn" data-ftab="ftab-skin-step">
+                  💡 피부 명도 & 톤 광채
                 </button>
               </div>
 
-              <!-- Tab 1: 피부 명도 5단계 -->
-              <div id="ftab-skin-step" class="f-tab-content active">
-                <h4><i class="fa-solid fa-sun"></i> 피부 명도 단계 (밝음 ~ 어두움)</h4>
-                <p class="tab-sub">내 피부의 맑기와 밝기 수준을 5단계로 테스트해 보세요.</p>
+              <!-- Tab 1: 다양한 옷 스타일 & 색상 비교 -->
+              <div id="ftab-outfit-styles" class="f-tab-content active">
+                <h4><i class="fa-solid fa-shirt"></i> TPO 상황별 옷 & 색상 비교</h4>
+                <p class="tab-sub">얼굴 아래 다양한 옷 스타일과 색상을 대보고 어울리는 옷 색깔을 찾아보세요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item active" data-cloth-style="pres_yellow">
+                    <span class="color-swatch-circle" style="background:#FFD166; border:2px solid #FFB74D;"></span>
+                    <span>👔 발표회 햇살 옐로우 셔츠</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="pres_blue">
+                    <span class="color-swatch-circle" style="background:#90E0EF; border:2px solid #48CAE4;"></span>
+                    <span>👔 발표회 파스텔 블루 조끼</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="trip_coral">
+                    <span class="color-swatch-circle" style="background:#FF9F1C; border:2px solid #F77F00;"></span>
+                    <span>🧥 체험학습 생기 코랄 바람막이</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="trip_khaki">
+                    <span class="color-swatch-circle" style="background:#81B29A; border:2px solid #3D405B;"></span>
+                    <span>🧥 체험학습 숲속 카키 점퍼</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="sports_yellow">
+                    <span class="color-swatch-circle" style="background:#FFE066; border:2px solid #FAB005;"></span>
+                    <span>🎽 체육대회 개나리 유니폼</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="sports_blue">
+                    <span class="color-swatch-circle" style="background:#0077B6; border:2px solid #023E8A;"></span>
+                    <span>🎽 체육대회 코발트 블루 유니폼</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="party_pink">
+                    <span class="color-swatch-circle" style="background:#FF85A1; border:2px solid #F72585;"></span>
+                    <span>👗 생일파티 핑크 로즈 드레스</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="party_purple">
+                    <span class="color-swatch-circle" style="background:#7209B7; border:2px solid #3F37C9;"></span>
+                    <span>👗 생일파티 로열 퍼플 슈트</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="daily_cream">
+                    <span class="color-swatch-circle" style="background:#FFF3BF; border:2px solid #FFE066;"></span>
+                    <span>👕 매일 등교 크림 티셔츠</span>
+                  </div>
+                  <div class="fit-chip-item" data-cloth-style="daily_navy">
+                    <span class="color-swatch-circle" style="background:#1D3557; border:2px solid #457B9D;"></span>
+                    <span>👕 매일 등교 딥 네이비 맨투맨</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 2: 계절별 퍼스널 컬러 천 드레이프 -->
+              <div id="ftab-drape-palette" class="f-tab-content">
+                <h4><i class="fa-solid fa-palette"></i> 계절별 베스트 컬러 천 드레이핑</h4>
+                <p class="tab-sub">어깨 위에 톤별 베스트 컬러 천을 대보고 얼굴이 가장 환해지는 천을 찾아보세요.</p>
+                <div class="option-chips-grid">
+                  <div class="fit-chip-item" data-drape-key="spring_yellow">
+                    <span class="color-swatch-circle" style="background:#FFD166;"></span>
+                    <span>🌸 봄 햇살 옐로우</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="spring_coral">
+                    <span class="color-swatch-circle" style="background:#FF9F1C;"></span>
+                    <span>🌸 봄 생기 코랄</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="summer_lavender">
+                    <span class="color-swatch-circle" style="background:#C77DFF;"></span>
+                    <span>🍦 여름 라벤더</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="summer_sky">
+                    <span class="color-swatch-circle" style="background:#90E0EF;"></span>
+                    <span>🍦 여름 파스텔 하늘</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="autumn_maple">
+                    <span class="color-swatch-circle" style="background:#E07A5F;"></span>
+                    <span>🍁 가을 노을 단풍</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="autumn_khaki">
+                    <span class="color-swatch-circle" style="background:#81B29A;"></span>
+                    <span>🍁 가을 숲속 카키</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="winter_pink">
+                    <span class="color-swatch-circle" style="background:#FF0054;"></span>
+                    <span>❄️ 겨울 핫 핑크</span>
+                  </div>
+                  <div class="fit-chip-item" data-drape-key="winter_cobalt">
+                    <span class="color-swatch-circle" style="background:#03045E;"></span>
+                    <span>❄️ 겨울 코발트 블루</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 3: 피부 명도 & 톤 광채 -->
+              <div id="ftab-skin-step" class="f-tab-content">
+                <h4><i class="fa-solid fa-sun"></i> 피부 명도 & 톤 광채 테스트</h4>
+                <p class="tab-sub">옷 색상에 따른 피부의 맑기와 혈색 톤 반사율을 테스트해 보세요.</p>
                 <div class="option-chips-grid">
                   <div class="fit-chip-item active" data-bright="very_bright">
                     <span class="color-swatch-circle" style="background:#FFF3E0; border:2px solid #FFE0B2;"></span>
@@ -168,7 +241,7 @@
                   </div>
                   <div class="fit-chip-item" data-bright="medium_bright">
                     <span class="color-swatch-circle" style="background:#FFE8D6; border:2px solid #FFCC80;"></span>
-                    <span>🌸 중간 밝음 (19~21호)</span>
+                    <span>🌸 중간 밝음 (21호)</span>
                   </div>
                   <div class="fit-chip-item" data-bright="soft_bright">
                     <span class="color-swatch-circle" style="background:#F7D6C8; border:2px solid #FFB74D;"></span>
@@ -182,101 +255,16 @@
                     <span class="color-swatch-circle" style="background:#A76D43; border:2px solid #FB8C00;"></span>
                     <span>🍂 또렷한 딥 (25호+)</span>
                   </div>
-                </div>
-              </div>
-
-              <!-- Tab 2: 웜톤 / 쿨톤 언더톤 온도 -->
-              <div id="ftab-undertone" class="f-tab-content">
-                <h4><i class="fa-solid fa-temperature-half"></i> 언더톤 베이스 (웜톤 vs 쿨톤)</h4>
-                <p class="tab-sub">얼굴에 옐로우 골드빛(웜톤)과 핑크 로즈빛(쿨톤)을 대보고 혈색을 확인해요.</p>
-                <div class="option-chips-grid">
-                  <div class="fit-chip-item active" data-undertone="warm_gold">
+                  <div class="fit-chip-item" data-undertone="warm_gold">
                     <span class="color-swatch-circle" style="background:#FFD54F;"></span>
                     <span>🔥 따뜻한 옐로우 웜</span>
-                  </div>
-                  <div class="fit-chip-item" data-undertone="warm_peach">
-                    <span class="color-swatch-circle" style="background:#FFB74D;"></span>
-                    <span>🍑 생기 피치 웜</span>
-                  </div>
-                  <div class="fit-chip-item" data-undertone="neutral">
-                    <span class="color-swatch-circle" style="background:#E0E0E0;"></span>
-                    <span>⚖️ 균형 잡힌 뉴트럴</span>
                   </div>
                   <div class="fit-chip-item" data-undertone="cool_rose">
                     <span class="color-swatch-circle" style="background:#F48FB1;"></span>
                     <span>🌸 핑크 로즈 쿨</span>
                   </div>
-                  <div class="fit-chip-item" data-undertone="cool_blue">
-                    <span class="color-swatch-circle" style="background:#90CAF9;"></span>
-                    <span>❄️ 시원한 아이스 쿨</span>
-                  </div>
                 </div>
               </div>
-
-              <!-- Tab 3: 계절별 퍼스널 컬러 천 드레이프 -->
-              <div id="ftab-drape-palette" class="f-tab-content">
-                <h4><i class="fa-solid fa-palette"></i> 계절별 찰떡 컬러 천 드레이핑</h4>
-                <p class="tab-sub">어깨 위에 톤별 베스트 컬러 천을 대보고 얼굴이 가장 환해지는 천을 찾아보세요.</p>
-                <div class="option-chips-grid">
-                  <div class="fit-chip-item active" data-drape-key="spring_yellow">
-                    <span class="color-swatch-circle" style="background:#FFD166;"></span>
-                    <span>봄 햇살 옐로우</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="spring_coral">
-                    <span class="color-swatch-circle" style="background:#FF9F1C;"></span>
-                    <span>봄 생기 코랄</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="summer_lavender">
-                    <span class="color-swatch-circle" style="background:#C77DFF;"></span>
-                    <span>여름 라벤더</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="summer_sky">
-                    <span class="color-swatch-circle" style="background:#90E0EF;"></span>
-                    <span>여름 파스텔 하늘</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="autumn_maple">
-                    <span class="color-swatch-circle" style="background:#E07A5F;"></span>
-                    <span>가을 노을 단풍</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="autumn_khaki">
-                    <span class="color-swatch-circle" style="background:#81B29A;"></span>
-                    <span>가을 숲속 카키</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="winter_pink">
-                    <span class="color-swatch-circle" style="background:#FF0054;"></span>
-                    <span>겨울 핫 핑크</span>
-                  </div>
-                  <div class="fit-chip-item" data-drape-key="winter_cobalt">
-                    <span class="color-swatch-circle" style="background:#03045E;"></span>
-                    <span>겨울 코발트 블루</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tab 4: 머리카락 & 눈동자 톤 매치 -->
-              <div id="ftab-hair-eye" class="f-tab-content">
-                <h4><i class="fa-solid fa-user-gear"></i> 머리카락 & 눈동자 톤 매치</h4>
-                <p class="tab-sub">나의 자연 머리색과 눈동자 톤을 맞춰 매치해 보세요.</p>
-                <div class="option-chips-grid">
-                  <div class="fit-chip-item active" data-feature="hair_light_brown">
-                    <span class="item-emoji">💇‍♀️</span>
-                    <span>밝은 갈색 머리</span>
-                  </div>
-                  <div class="fit-chip-item" data-feature="hair_soft_brown">
-                    <span class="item-emoji">👧</span>
-                    <span>부드러운 흑갈색</span>
-                  </div>
-                  <div class="fit-chip-item" data-feature="hair_deep_brown">
-                    <span class="item-emoji">👦</span>
-                    <span>짙은 밤색 갈색</span>
-                  </div>
-                  <div class="fit-chip-item" data-feature="hair_black">
-                    <span class="item-emoji">🧑</span>
-                    <span>칠흑 검정 머리</span>
-                  </div>
-                  <div class="fit-chip-item" data-feature="eye_honey">
-                    <span class="color-swatch-circle" style="background:#B37D4E;"></span>
-                    <span>밝은 꿀빛 눈동자</span>
                   </div>
                   <div class="fit-chip-item" data-feature="eye_chestnut">
                     <span class="color-swatch-circle" style="background:#4A2C11;"></span>
