@@ -526,7 +526,7 @@ button, input, select {
 
 .dressing-room-workspace {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 28px;
   align-items: start;
 }
@@ -541,7 +541,7 @@ button, input, select {
 .vanity-mirror-frame {
   position: relative;
   width: 100%;
-  max-width: 520px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 24px;
   background: linear-gradient(145deg, #ffd1dc, #ffb6c1);
